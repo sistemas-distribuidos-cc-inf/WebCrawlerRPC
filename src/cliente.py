@@ -10,17 +10,20 @@ max_page = 0
 
 def main():
 
-    client = xmlrpclib.ServerProxy('http://localhost:8000')
+    proxy = xmlrpclib.ServerProxy('http://localhost:8000')
     print 'Client started'
 
     if len( sys.argv ) == 3:
 
         url_seed = sys.argv[1]
         max_page = sys.argv[2]
-        pagesCrawled = client.crawl_web( url_seed, max_page )
-        with open("Conteudo Busca.txt", "w") as links_file: links_file.write( str( pagesCrawled ) )
-        print 'Success!'
-
+        try:
+            with open( "ResultBusca.txt", "wb" ) as handle:
+                handle.write( proxy.crawl( url_seed, max_page ).data )
+            handle.close()
+            print 'Success!'
+        except:
+            print 'Call failed.'
     else:
         print 'Error: Espera-se <programa> <url> <qtd max_page>\n'
 

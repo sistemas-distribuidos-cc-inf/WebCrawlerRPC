@@ -58,7 +58,17 @@ def add_page_to_index( index, url, content ):
     for word in words:
         add_to_index( index, word, url )
 
-def crawl_web( seed, max_page ):
+def save_data( contentBusca ):
+
+    fileBusca = open( 'Busca.txt', 'wb' )
+    if fileBusca:
+        fileBusca.write( contentBusca )
+        fileBusca.close()
+        return 1
+    fileBusca.close()
+    return 0
+
+def crawl_web( seed, max_page ): # argumento opcional 'max_page'
 
     tocrawl = [seed]
     crawled = []
@@ -71,17 +81,24 @@ def crawl_web( seed, max_page ):
             #add_page_to_index( index, page, content_page )
             union( tocrawl, get_all_links( content_page ) )
             crawled.append( page )
-	else:
-	    break
+    with open("Busca.txt", "wb") as links_file: links_file.write( str( crawled ) )
+    links_file.close()
 
-    return crawled
+def returnFile( url, max_page ):
+
+    crawl_web( url, max_page )
+    try:
+        with open( 'Busca.txt', 'rb' ) as handle:
+            return xmlrpclib.Binary( handle.read() )
+    except:
+            return 'error'
 
 def main():
 
     server = SimpleXMLRPCServer(("localhost", 8000))
-    print "Server Started..."
+    print "Listening on port 8000..."
 
-    server.register_function( crawl_web )
+    server.register_function( returnFile, 'crawl' )
     server.serve_forever()
 
 if __name__ == "__main__":
