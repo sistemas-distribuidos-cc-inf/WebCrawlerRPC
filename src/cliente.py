@@ -10,7 +10,7 @@ max_page = 0
 
 def main():
 
-    client = xmlrpclib.ServerProxy('localhost')
+    client = xmlrpclib.ServerProxy('http://localhost:8000')
     print 'Client started'
 
     if len( sys.argv ) == 3:

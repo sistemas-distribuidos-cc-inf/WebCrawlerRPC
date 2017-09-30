@@ -59,16 +59,21 @@ def add_page_to_index( index, url, content ):
         add_to_index( index, word, url )
 
 def crawl_web( seed, max_page ):
+
     tocrawl = [seed]
     crawled = []
     index   = []
+
     while tocrawl:
         page = tocrawl.pop()
-        if page not in crawled and len( crawled ) < max_page:
+        if page not in crawled and len( tocrawl ) < max_page:
             content_page = get_page( page )
             #add_page_to_index( index, page, content_page )
             union( tocrawl, get_all_links( content_page ) )
             crawled.append( page )
+	else:
+	    break
+
     return crawled
 
 def main():
