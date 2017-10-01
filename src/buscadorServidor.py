@@ -58,16 +58,6 @@ def add_page_to_index( index, url, content ):
     for word in words:
         add_to_index( index, word, url )
 
-def save_data( contentBusca ):
-
-    fileBusca = open( 'Busca.txt', 'wb' )
-    if fileBusca:
-        fileBusca.write( contentBusca )
-        fileBusca.close()
-        return 1
-    fileBusca.close()
-    return 0
-
 def crawl_web( seed, max_page ): # argumento opcional 'max_page'
 
     tocrawl = [seed]
@@ -81,14 +71,14 @@ def crawl_web( seed, max_page ): # argumento opcional 'max_page'
             #add_page_to_index( index, page, content_page )
             union( tocrawl, get_all_links( content_page ) )
             crawled.append( page )
-    with open("Busca.txt", "wb") as links_file: links_file.write( str( crawled ) )
+    with open("Search.txt", "wb") as links_file: links_file.write( str( crawled ) )
     links_file.close()
 
 def returnFile( url, max_page ):
 
     crawl_web( url, max_page )
     try:
-        with open( 'Busca.txt', 'rb' ) as handle:
+        with open( 'Search.txt', 'rb' ) as handle:
             return xmlrpclib.Binary( handle.read() )
     except:
             return 'error'
